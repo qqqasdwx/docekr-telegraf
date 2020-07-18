@@ -1,0 +1,29 @@
+version: '3.2'
+networks:
+  monitor:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.214.0/24
+
+services:
+  telegraf:
+    image: qqqasdwx/telegraf:home-server
+    container_name: 'telegraf'
+    restart: always
+    environment:
+      - INFLUXDB_ADDR=${INFLUXDB_HOST}:${INFLUXDB_PORT}
+      - INFLUXDB_USERNAME=${INFLUXDB_USERNAME}
+      - INFLUXDB_PASSWORD=${INFLUXDB_PASSWORD}
+      - DEBUG=${DEBUG}
+      - QUIET=${QUIET}
+      - IPMI_USER=${IPMI_USER}
+      - IPMI_PASSWD=${IPMI_PASSWD}
+      - IPMI_HOST=${IPMI_HOST}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
+    networks:
+      - monitor
